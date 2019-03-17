@@ -1,4 +1,7 @@
 import model.*;
+import utility.JsonFileIO;
+
+import java.io.IOException;
 import java.util.*;
 
 // A simple "To Do" app
@@ -10,7 +13,11 @@ public class ConsoleToDoApp {
     
     public static void main(String[] args) {
         input = new Scanner(System.in);
-        todo = new ArrayList<>();
+        try {
+            todo = JsonFileIO.read();
+        } catch (IOException e) {
+            System.out.println("Something went wrong with reading the file. ");
+        }
         
         printLogo();
         while (!exit) {
@@ -47,6 +54,11 @@ public class ConsoleToDoApp {
     private static void addNewTask() {
         if (getDescriptionForTask()) {
             todo.add(new Task(userInput));
+            try {
+                JsonFileIO.write(todo);
+            } catch (IOException e) {
+                System.out.println("Something went wrong with writing to the file.");
+            }
         }
     }
     
