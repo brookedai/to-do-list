@@ -7,6 +7,7 @@ import javafx.stage.Stage;
 import model.Task;
 import utility.JsonFileIO;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,12 @@ public class PomoTodoApp extends Application {
     private static Stage primaryStage;
     
     public static void main(String[] args) {
+        try {
+            tasks = JsonFileIO.read();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
         launch(args);
     }
     
