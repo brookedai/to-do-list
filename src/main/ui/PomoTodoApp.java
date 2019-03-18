@@ -23,7 +23,7 @@ public class PomoTodoApp extends Application {
         try {
             tasks = JsonFileIO.read();
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            throw new RuntimeException(e);
         }
 
         launch(args);

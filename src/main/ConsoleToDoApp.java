@@ -16,7 +16,7 @@ public class ConsoleToDoApp {
         try {
             todo = JsonFileIO.read();
         } catch (IOException e) {
-            System.out.println("Something went wrong with reading the file. ");
+            throw new RuntimeException(e);
         }
         
         printLogo();
@@ -57,7 +57,7 @@ public class ConsoleToDoApp {
             try {
                 JsonFileIO.write(todo);
             } catch (IOException e) {
-                System.out.println("Something went wrong with writing to the file.");
+                throw new RuntimeException(e);
             }
         }
     }
