@@ -11,8 +11,10 @@ import model.Tag;
 import model.Task;
 import ui.ListView;
 import ui.PomoTodoApp;
+import utility.JsonFileIO;
 import utility.Logger;
 
+import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -127,6 +129,11 @@ public class EditTaskController implements Initializable {
         saveStatus();
         savePriority();
         saveTags();
+        try {
+            JsonFileIO.write(PomoTodoApp.getTasks());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         Logger.log("EditTaskController", "Save task:\n" + task);
     }
     
@@ -186,8 +193,7 @@ public class EditTaskController implements Initializable {
     @FXML
     public void cancelEditTask() {
         Logger.log("EditTaskController", "Edit Task cancelled.");
-        Logger.log("EditTaskController", "Close application");
-        Platform.exit();
+        PomoTodoApp.setScene(new ListView(PomoTodoApp.getTasks()));
     }
     
     @Override

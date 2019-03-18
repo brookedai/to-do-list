@@ -125,6 +125,7 @@ public class TodobarController implements Initializable {
             switch (selectedIndex) {
                 case 0:
                     Logger.log("TodobarOptionsPopUpController", "Edit is not supported in this version");
+                    editTask();
                     break;
                 case 1:
                     deleteTask();
@@ -154,7 +155,7 @@ public class TodobarController implements Initializable {
     // MODIFIES: PomoTodoApp.tasks, tasks.json
     // EFFECTS: removes task corresponding to this controller from the task list
     private void deleteTask() {
-        PomoTodoApp.getTasks().remove(task);
+        PomoTodoApp.getTasks().remove(this.task);
         PomoTodoApp.setScene(new ListView(PomoTodoApp.getTasks()));
         try {
             JsonFileIO.write(PomoTodoApp.getTasks());
@@ -162,6 +163,12 @@ public class TodobarController implements Initializable {
             throw new RuntimeException();
         }
     }
+
+    // EFFECTS: changes app to edit task screen
+    private void editTask() {
+        PomoTodoApp.setScene(new EditTask(this.task));
+    }
+
 }
 
 
