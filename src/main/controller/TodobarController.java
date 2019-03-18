@@ -16,6 +16,7 @@ import model.Task;
 import ui.EditTask;
 import ui.ListView;
 import ui.PomoTodoApp;
+import utility.JsonFileIO;
 import utility.Logger;
 
 import java.io.File;
@@ -126,7 +127,7 @@ public class TodobarController implements Initializable {
                     Logger.log("TodobarOptionsPopUpController", "Edit is not supported in this version");
                     break;
                 case 1:
-                    Logger.log("TodobarOptionsPopUpController", "Delete is not supported in this version");
+                    deleteTask();
                     break;
                 default:
                     Logger.log("TodobarOptionsPopUpController", "No action is implemented for the selected option");
@@ -146,6 +147,19 @@ public class TodobarController implements Initializable {
             Logger.log("TodobarActionsPopUpController",
                     "No action is implemented for the selected option - " + selectedIndex);
             actionsPopUp.hide();
+        }
+    }
+
+
+    // MODIFIES: PomoTodoApp.tasks, tasks.json
+    // EFFECTS: removes task corresponding to this controller from the task list
+    private void deleteTask() {
+        PomoTodoApp.getTasks().remove(task);
+        PomoTodoApp.setScene(new ListView(PomoTodoApp.getTasks()));
+        try {
+            JsonFileIO.write(PomoTodoApp.getTasks());
+        } catch (IOException e) {
+            throw new RuntimeException();
         }
     }
 }
