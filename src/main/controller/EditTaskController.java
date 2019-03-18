@@ -134,6 +134,7 @@ public class EditTaskController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        cancelEditTask();
         Logger.log("EditTaskController", "Save task:\n" + task);
     }
     

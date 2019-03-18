@@ -60,25 +60,25 @@ public class TaskParser {
             components[i][0] = cleanUp(value[0], 1);
             components[i][1] = value[1];
         }
-        String[][] componentsFormatted = format(components);
+        String[][] componentsFormatted = format(components, "description", "tags", "due-date", "priority", "status");
         return componentsFormatted;
     }
 
     // REQUIRES: unformatted is String[5][2]
     // EFFECTS: formats the unformatted String array into an array in the form
-    //          [description, tags, due-date, priority, status]
-    private String[][] format(String[][] unformatted) {
+    //          [s1, s2, s3, s4, s5]
+    private String[][] format(String[][] unformatted, String s1, String s2, String s3, String s4, String s5) {
         String[][] formatted = new String[5][2];
         for (int i = 0; i < unformatted.length; i++) {
-            if (unformatted[i][0].equals("description")) {
+            if (unformatted[i][0].equals(s1)) {
                 formatted[0] = unformatted[i];
-            } else if (unformatted[i][0].equals("tags")) {
+            } else if (unformatted[i][0].equals(s2)) {
                 formatted[1] = unformatted[i];
-            } else if (unformatted[i][0].equals("due-date")) {
+            } else if (unformatted[i][0].equals(s3)) {
                 formatted[2] = unformatted[i];
-            } else if (unformatted[i][0].equals("priority")) {
+            } else if (unformatted[i][0].equals(s4)) {
                 formatted[3] = unformatted[i];
-            } else if (unformatted[i][0].equals("status")) {
+            } else if (unformatted[i][0].equals(s5)) {
                 formatted[4] = unformatted[i];
             }
         }
@@ -146,8 +146,8 @@ public class TaskParser {
         if (component[0].equals("due-date")) {
             DueDate d = null;
             String[] dateComponents = cleanUp(component[1], 1).split(",");
-            if (dateComponents.length > 1) {
-                String[][] componentValue = dateValues(dateComponents);
+            if (dateComponents.length == 5) {
+                String[][] componentValue = format(dateValues(dateComponents),"year", "month", "day","hour","minute");
 
                 Calendar c = Calendar.getInstance();
                 c.set(Integer.parseInt(componentValue[0][1]), Integer.parseInt(componentValue[1][1]),
@@ -173,6 +173,7 @@ public class TaskParser {
             if (value[1].charAt(0) == '"' || value[1].charAt(value[1].length() - 1) == '"') {
                 throw new RuntimeException("DueDate field incorrectly represented as " + value[1]);
             }
+            value[0] = cleanUp(value[0],1);
             componentValue[i] = value;
         }
         return componentValue;
