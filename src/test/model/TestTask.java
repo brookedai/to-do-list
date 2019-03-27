@@ -1,6 +1,8 @@
 package model;
 
 import model.exceptions.EmptyStringException;
+import model.exceptions.InvalidProgressException;
+import model.exceptions.NegativeInputException;
 import model.exceptions.NullArgumentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -217,5 +219,45 @@ class TestTask {
                   "\n\tTags: #tag1, #tag2" +
                   "\n}";
         assertEquals(desc, t.toString());
+    }
+
+    @Test
+    void testSetProgress() {
+        assertEquals(0, t.getProgress());
+        t.setProgress(55);
+        assertEquals(55, t.getProgress());
+    }
+
+    @Test
+    void testSetProgressExceptionExpected() {
+        try {
+            t.setProgress(-1);
+            fail("InvalidProgressException expected");
+        } catch (InvalidProgressException e) {
+            // expected
+        }
+        try {
+            t.setProgress(101);
+            fail("InvalidProgressException expected");
+        } catch (InvalidProgressException e) {
+            // expected
+        }
+    }
+
+    @Test
+    void testSetEstimatedTimeToComplete() {
+        assertEquals(0, t.getEstimatedTimeToComplete());
+        t.setEstimatedTimeToComplete(5);
+        assertEquals(5, t.getEstimatedTimeToComplete());
+    }
+
+    @Test
+    void testSetEstimatedTimeToCompleteExceptionExpected() {
+        try {
+            t.setEstimatedTimeToComplete(-1);
+            fail("NegativeInputException expected");
+        } catch (NegativeInputException e) {
+            // expected
+        }
     }
 }
