@@ -10,8 +10,7 @@ import java.util.Objects;
 
 // Represents a Project, a collection of zero or more Tasks
 // Class Invariant: no duplicated task; order of tasks is preserved
-public class Project {
-    private String description;
+public class Project extends Todo {
     private List<Todo> tasks;
     
     // MODIFIES: this
@@ -19,10 +18,10 @@ public class Project {
     //     the constructed project shall have no tasks.
     //  throws EmptyStringException if description is null or empty
     public Project(String description) {
+        super(description);
         if (description == null || description.length() == 0) {
             throw new EmptyStringException("Cannot construct a project with no description");
         }
-        this.description = description;
         tasks = new ArrayList<>();
     }
     
@@ -30,7 +29,7 @@ public class Project {
     // EFFECTS: task is added to this project (if it was not already part of it)
     //   throws NullArgumentException when task is null
     public void add(Todo task) {
-        if (!contains(task)) {
+        if (!contains(task) && !equals(task)) {
             tasks.add(task);
         }
     }
@@ -49,6 +48,15 @@ public class Project {
         return description;
     }
 
+    @Override
+    public int getEstimatedTimeToComplete() {
+        int total = 0;
+        for (Todo t : tasks) {
+            total += t.getEstimatedTimeToComplete();
+        }
+        return total;
+    }
+
     // EFFECTS: returns an unmodifiable list of tasks in this project.
     @Deprecated
     public List<Task> getTasks() {
@@ -60,7 +68,11 @@ public class Project {
 //     the value returned is the average of the percentage of completion of
 //     all the tasks and sub-projects in this project.
     public int getProgress() {
-        return 0; // stub
+        int sum = 0;
+        for (Todo t : tasks) {
+            sum += t.getProgress();
+        }
+        return tasks.size() == 0 ? 0 : sum / tasks.size();
     }
 
     // EFFECTS: returns the number of tasks (and sub-projects) in this project

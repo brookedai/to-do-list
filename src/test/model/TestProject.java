@@ -15,16 +15,14 @@ public class TestProject {
     private Project p;
     private Task task1;
     private Task task2;
+    private Task task3;
 
     @BeforeEach
     public void runBefore() {
         p = new Project("Project1");
-        try {
-            task1 = new Task("task1 ## today; cpsc210");
-            task2 = new Task("task2 ## tomorrow; to do");
-        } catch (EmptyStringException e) {
-            fail("EmptyStringException should not have been thrown");
-        }
+        task1 = new Task("task1 ## today; cpsc210");
+        task2 = new Task("task2 ## tomorrow; to do");
+        task3 = new Task("task3 ## important; urgent; up next");
     }
 
     @Test
@@ -68,6 +66,13 @@ public class TestProject {
         } catch (NullArgumentException e) {
             fail("NullArgumentException should not have been thrown");
         }
+    }
+
+    @Test
+    void testAddItself() {
+        assertEquals(0, p.getNumberOfTasks());
+        p.add(p);
+        assertEquals(0, p.getNumberOfTasks());
     }
 
     @Test
@@ -126,18 +131,24 @@ public class TestProject {
     void testGetProgress() {
         assertEquals(0, p.getProgress());
 
-        task2.setStatus(Status.DONE);
         p.add(task1);
         p.add(task2);
-        assertEquals(50, p.getProgress());
+        p.add(task3);
+        assertEquals(0, p.getProgress());
 
-        try {
-            Task task3 = new Task("task3 ## cpsc210");
-            p.add(task3);
-        } catch (EmptyStringException e) {
-            fail("EmptyStringException should not have been thrown");
-        }
+        task1.setProgress(100);
         assertEquals(33, p.getProgress());
+
+        task2.setProgress(50);
+        task3.setProgress(25);
+        assertEquals(58, p.getProgress());
+
+        Project project2 = new Project("Project2");
+        Task task4 = new Task("task4 ## in progress");
+        project2.add(task4);
+        project2.add(p);
+        assertEquals(29, project2.getProgress());
+
     }
 
 //    @Test
@@ -194,5 +205,35 @@ public class TestProject {
     void testHashCode() {
         Project project2 = new Project(p.getDescription());
         assertEquals(p.hashCode(), project2.hashCode());
+    }
+
+    @Test
+    void testSetEstimatedTimeToComplete() {
+        p.add(task1);
+        p.add(task2);
+        p.add(task3);
+        assertEquals(0, p.getEstimatedTimeToComplete());
+
+        task1.setEstimatedTimeToComplete(8);
+        assertEquals(8, p.getEstimatedTimeToComplete());
+
+        task2.setEstimatedTimeToComplete(2);
+        task3.setEstimatedTimeToComplete(10);
+        assertEquals(20, p.getEstimatedTimeToComplete());
+
+        Project project2 = new Project("Project2");
+        Task task4 = new Task("task4 ## urgent");
+        task4.setEstimatedTimeToComplete(4);
+        project2.add(task4);
+        project2.add(p);
+        assertEquals(24, project2.getEstimatedTimeToComplete());
+    }
+
+    @Test
+    void testIsCompleted() {
+        assertFalse(p.isCompleted());
+        p.add(task1);
+        task1.setProgress(100);
+        assertTrue(p.isCompleted());
     }
 }
