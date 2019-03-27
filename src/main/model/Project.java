@@ -3,14 +3,11 @@ package model;
 import model.exceptions.EmptyStringException;
 import model.exceptions.NullArgumentException;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 // Represents a Project, a collection of zero or more Tasks
 // Class Invariant: no duplicated task; order of tasks is preserved
-public class Project extends Todo {
+public class Project extends Todo implements Iterable<Todo> {
     private List<Todo> tasks;
     
     // MODIFIES: this
@@ -94,6 +91,17 @@ public class Project extends Todo {
         }
         return tasks.contains(task);
     }
+
+    // MODIFIES: this
+    // EFFECTS: sets priority for this project
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
+
+    // EFFECTS: returns this project's priority
+    public Priority getPriority() {
+        return this.priority;
+    }
     
     @Override
     public boolean equals(Object o) {
@@ -111,4 +119,33 @@ public class Project extends Todo {
     public int hashCode() {
         return Objects.hash(description);
     }
+
+    @Override
+    public Iterator<Todo> iterator() {
+        return new TodoIterator(); //stub
+    }
+
+    // inner class
+    private class TodoIterator implements Iterator<Todo> {
+        private Iterator itr;
+
+        public TodoIterator() {
+            itr = tasks.iterator();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return itr.hasNext();
+        }
+
+        @Override
+        public Todo next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+
+            return null; //stub
+        }
+    }
+
 }

@@ -16,7 +16,6 @@ public class Task extends Todo {
 
     private Set<Tag> tags;
     private DueDate dueDate;
-    private Priority priority;
     private Status status;
 
     // MODIFIES: this

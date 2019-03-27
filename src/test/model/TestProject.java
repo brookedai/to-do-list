@@ -13,16 +13,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestProject {
     private Project p;
+    private Project p2;
     private Task task1;
     private Task task2;
     private Task task3;
+    private Task task4;
 
     @BeforeEach
     public void runBefore() {
         p = new Project("Project1");
+        p2 = new Project("Project2");
         task1 = new Task("task1 ## today; cpsc210");
-        task2 = new Task("task2 ## tomorrow; to do");
+        task2 = new Task("task2 ## tomorrow; important; to do");
         task3 = new Task("task3 ## important; urgent; up next");
+        task4 = new Task("task4 ## urgent; in progress");
     }
 
     @Test
@@ -51,7 +55,6 @@ public class TestProject {
             // expected
         }
     }
-
 
     @Test
     void testAddNothingThrown() {
@@ -144,7 +147,6 @@ public class TestProject {
         assertEquals(58, p.getProgress());
 
         Project project2 = new Project("Project2");
-        Task task4 = new Task("task4 ## in progress");
         project2.add(task4);
         project2.add(p);
         assertEquals(29, project2.getProgress());
@@ -203,8 +205,8 @@ public class TestProject {
 
     @Test
     void testHashCode() {
-        Project project2 = new Project(p.getDescription());
-        assertEquals(p.hashCode(), project2.hashCode());
+        p2 = new Project(p.getDescription());
+        assertEquals(p.hashCode(), p2.hashCode());
     }
 
     @Test
@@ -221,12 +223,11 @@ public class TestProject {
         task3.setEstimatedTimeToComplete(10);
         assertEquals(20, p.getEstimatedTimeToComplete());
 
-        Project project2 = new Project("Project2");
-        Task task4 = new Task("task4 ## urgent");
+
         task4.setEstimatedTimeToComplete(4);
-        project2.add(task4);
-        project2.add(p);
-        assertEquals(24, project2.getEstimatedTimeToComplete());
+        p2.add(task4);
+        p2.add(p);
+        assertEquals(24, p2.getEstimatedTimeToComplete());
     }
 
     @Test
@@ -235,5 +236,34 @@ public class TestProject {
         p.add(task1);
         task1.setProgress(100);
         assertTrue(p.isCompleted());
+    }
+
+    @Test
+    void testSetPriority() {
+        assertEquals(new Priority(4), p.getPriority());
+        p.setPriority(new Priority(1));
+        assertEquals(new Priority(1), p.getPriority());
+    }
+
+    @Test
+    void testIterator() {
+        p2.setPriority(new Priority(1));
+
+        List<Todo> todos = new ArrayList<>();
+        todos.add(task3);
+        todos.add(p2);
+        todos.add(task2);
+        todos.add(task4);
+        todos.add(task1);
+
+        List<Todo> check = new ArrayList<>();
+        for (Todo t : p) {
+            check.add(t);
+        }
+
+        assertEquals(todos.size(), check.size());
+        for (Todo t : todos) {
+            assertTrue(check.contains(t));
+        }
     }
 }

@@ -73,6 +73,23 @@ class TestTask {
     }
 
     @Test
+    void testEqualsFalse() {
+        Task t2 = new Task("This is a task");
+        t2.setStatus(Status.IN_PROGRESS);
+        t2.setDueDate(tomorrow);
+        t2.setPriority(new Priority(1));
+        assertFalse(t.equals(t2));
+
+        t2.setDueDate(today);
+        t2.setPriority(new Priority(2));
+        assertFalse(t.equals(t2));
+
+        t2.setPriority(new Priority(1));
+        t2.setStatus(Status.TODO);
+        assertFalse(t.equals(t2));
+    }
+
+    @Test
     void testEqualsItself() {
         assertTrue(t.equals(t));
     }
@@ -209,6 +226,7 @@ class TestTask {
                 "\n\tTags:  " +
                 "\n}";
         assertEquals(desc, t.toString());
+
         t.addTag("tag1");
         t.addTag("tag2");
         desc =    "\n{" +
@@ -218,6 +236,16 @@ class TestTask {
                   "\n\tPriority: " + t.getPriority().toString() +
                   "\n\tTags: #tag1, #tag2" +
                   "\n}";
+        assertEquals(desc, t.toString());
+
+        t.setDueDate(null);
+        desc =    "\n{" +
+                "\n\tDescription: " + t.getDescription() +
+                "\n\tDue date: " +
+                "\n\tStatus: " + t.getStatus().toString() +
+                "\n\tPriority: " + t.getPriority().toString() +
+                "\n\tTags: #tag1, #tag2" +
+                "\n}";
         assertEquals(desc, t.toString());
     }
 

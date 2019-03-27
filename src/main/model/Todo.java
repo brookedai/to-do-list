@@ -4,6 +4,7 @@ public abstract class Todo {
     protected String description;
     protected int progress;
     protected int etcHours;  // Estimated Time To Complete
+    protected Priority priority;
 
     // MODIFIES: this
     // EFFECTS: sets the "description" using the given description
@@ -13,6 +14,7 @@ public abstract class Todo {
         this.description = description;
         this.progress = 0;
         this.etcHours = 0;
+        this.priority = new Priority(4);
     }
 
     // EFFECTS: returns the description
