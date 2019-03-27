@@ -79,6 +79,15 @@ public class TestProject {
     }
 
     @Test
+    void testAddDuplicate() {
+        p.add(task1);
+        assertEquals(1, p.getNumberOfTasks());
+
+        p.add(task1);
+        assertEquals(1, p.getNumberOfTasks());
+    }
+
+    @Test
     void testAddNullArgumentExceptionExpected() {
         try {
             p.add(null);
@@ -100,6 +109,14 @@ public class TestProject {
         } catch (NullArgumentException e) {
             fail("NullArgumentException should not have been thrown");
         }
+    }
+
+    @Test
+    void testRemoveNotContained() {
+        p.add(task1);
+        assertEquals(1, p.getNumberOfTasks());
+        p.remove(task2);
+        assertEquals(1, p.getNumberOfTasks());
     }
 
     @Test
@@ -163,6 +180,16 @@ public class TestProject {
 //        task1.setStatus(Status.DONE);
 //        assertTrue(p.isCompleted());
 //    }
+
+    @Test
+    void testGetTasks() {
+        try {
+            p.getTasks();
+            fail("UnsupportedOperationException expected");
+        } catch (UnsupportedOperationException e) {
+            // expected
+        }
+    }
 
     @Test
     void testContainsNothingThrown() {
@@ -234,6 +261,7 @@ public class TestProject {
     void testIsCompleted() {
         assertFalse(p.isCompleted());
         p.add(task1);
+        assertFalse(p.isCompleted());
         task1.setProgress(100);
         assertTrue(p.isCompleted());
     }
