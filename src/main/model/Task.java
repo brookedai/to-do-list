@@ -128,6 +128,8 @@ public class Task extends Todo {
             throw new NegativeInputException();
         }
         this.etcHours = hours;
+        setChanged();
+        notifyObservers();
     }
 
     // MODIFIES: this

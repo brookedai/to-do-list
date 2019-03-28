@@ -7,7 +7,7 @@ import java.util.*;
 
 // Represents a Project, a collection of zero or more Tasks
 // Class Invariant: no duplicated task; order of tasks is preserved
-public class Project extends Todo implements Iterable<Todo> {
+public class Project extends Todo implements Iterable<Todo>, Observer {
     private List<Todo> tasks;
 
     // MODIFIES: this
@@ -28,6 +28,8 @@ public class Project extends Todo implements Iterable<Todo> {
     public void add(Todo task) {
         if (!contains(task) && !equals(task)) {
             tasks.add(task);
+            task.addObserver(this);
+            update(task,null);
         }
     }
 
@@ -37,6 +39,8 @@ public class Project extends Todo implements Iterable<Todo> {
     public void remove(Todo task) {
         if (contains(task)) {
             tasks.remove(task);
+            task.deleteObserver(this);
+            update(task,null);
         }
     }
 
@@ -47,11 +51,7 @@ public class Project extends Todo implements Iterable<Todo> {
 
     @Override
     public int getEstimatedTimeToComplete() {
-        int total = 0;
-        for (Todo t : tasks) {
-            total += t.getEstimatedTimeToComplete();
-        }
-        return total;
+        return etcHours;
     }
 
     // EFFECTS: returns an unmodifiable list of tasks in this project.
@@ -112,6 +112,17 @@ public class Project extends Todo implements Iterable<Todo> {
     @Override
     public Iterator<Todo> iterator() {
         return new TodoIterator(); //stub
+    }
+
+    // EFFECTS: updates estimated completion time
+    @Override
+    public void update(Observable o, Object arg) {
+        etcHours = 0;
+        for (Todo t : tasks) {
+            etcHours += t.getEstimatedTimeToComplete();
+        }
+        setChanged();
+        notifyObservers();
     }
 
     // inner class
