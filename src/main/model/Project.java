@@ -126,26 +126,16 @@ public class Project extends Todo implements Iterable<Todo> {
 
         @Override
         public boolean hasNext() {
-            if (priorityLevel > 4) {
+            if (priorityLevel > 4 || tasks.size() == 0) {
                 return false;
             }
+            int currentIndex = index;
+            int currentPriority = priorityLevel;
+            Todo next = findNextValid();
+            index = currentIndex;
+            priorityLevel = currentPriority;
 
-            int i = index;
-            int p = priorityLevel;
-            while (p < 5) {
-                Todo current = tasks.get(i);
-                int currentp = p;
-                i++;
-                if (i >= tasks.size()) {
-                    i = 0;
-                    p++;
-                }
-
-                if (current.getPriority().equals(new Priority(currentp))) {
-                    return true;
-                }
-            }
-            return false;
+            return next != null;
         }
 
         @Override
@@ -153,9 +143,16 @@ public class Project extends Todo implements Iterable<Todo> {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
-            while (index < tasks.size() && priorityLevel < 5) {
+            return findNextValid();
+        }
+
+        // MODIFIES: this
+        // EFFECTS: returns the next valid to do object, or null if none found
+        private Todo findNextValid() {
+
+            while (priorityLevel < 5) {
                 Todo current = tasks.get(index);
-                int currentPriority = priorityLevel;
+                int currentp = priorityLevel;
                 index++;
 
                 if (index >= tasks.size()) {
@@ -163,11 +160,11 @@ public class Project extends Todo implements Iterable<Todo> {
                     priorityLevel++;
                 }
 
-                if (current.getPriority().equals(new Priority(currentPriority))) {
+                if (current.getPriority().equals(new Priority(currentp))) {
                     return current;
                 }
             }
-            return null; // should never run
+            return null;
         }
     }
 

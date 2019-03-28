@@ -5,9 +5,7 @@ import model.exceptions.NullArgumentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -299,7 +297,18 @@ public class TestProject {
         assertEquals(todos.size(), check.size());
         for (int i = 0; i < todos.size(); i++) {
             System.out.println(check.get(i).getDescription());
-           //assertTrue(todos.get(i).equals(check.get(i)));
+           assertTrue(todos.get(i).equals(check.get(i)));
+        }
+    }
+
+    @Test
+    void testIteratorNextExceptionExpected() {
+        Iterator itr = p.iterator();
+        try {
+            itr.next();
+            fail("NoSuchElementException expected");
+        } catch (NoSuchElementException e) {
+            // expected
         }
     }
 }
