@@ -9,7 +9,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestProject {
+class TestProject {
     private Project p;
     private Project p2;
     private Task task1;
