@@ -9,7 +9,7 @@ import java.util.*;
 // Class Invariant: no duplicated task; order of tasks is preserved
 public class Project extends Todo implements Iterable<Todo> {
     private List<Todo> tasks;
-    
+
     // MODIFIES: this
     // EFFECTS: constructs a project with the given description
     //     the constructed project shall have no tasks.
@@ -21,7 +21,7 @@ public class Project extends Todo implements Iterable<Todo> {
         }
         tasks = new ArrayList<>();
     }
-    
+
     // MODIFIES: this
     // EFFECTS: task is added to this project (if it was not already part of it)
     //   throws NullArgumentException when task is null
@@ -30,7 +30,7 @@ public class Project extends Todo implements Iterable<Todo> {
             tasks.add(task);
         }
     }
-    
+
     // MODIFIES: this
     // EFFECTS: removes task from this project
     //   throws NullArgumentException when task is null
@@ -39,7 +39,7 @@ public class Project extends Todo implements Iterable<Todo> {
             tasks.remove(task);
         }
     }
-    
+
     // EFFECTS: returns the description of this project
     public String getDescription() {
         return description;
@@ -82,7 +82,7 @@ public class Project extends Todo implements Iterable<Todo> {
     public boolean isCompleted() {
         return getNumberOfTasks() != 0 && getProgress() == 100;
     }
-    
+
     // EFFECTS: returns true if this project contains the task
     //   throws NullArgumentException when task is null
     public boolean contains(Todo task) {
@@ -92,17 +92,6 @@ public class Project extends Todo implements Iterable<Todo> {
         return tasks.contains(task);
     }
 
-    // MODIFIES: this
-    // EFFECTS: sets priority for this project
-    public void setPriority(Priority priority) {
-        this.priority = priority;
-    }
-
-    // EFFECTS: returns this project's priority
-    public Priority getPriority() {
-        return this.priority;
-    }
-    
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -114,7 +103,7 @@ public class Project extends Todo implements Iterable<Todo> {
         Project project = (Project) o;
         return Objects.equals(description, project.description);
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hash(description);
@@ -127,15 +116,36 @@ public class Project extends Todo implements Iterable<Todo> {
 
     // inner class
     private class TodoIterator implements Iterator<Todo> {
-        private Iterator itr;
+        private int index; // index we're currently at in list
+        private int priorityLevel; // priority we're checking
 
         public TodoIterator() {
-            itr = tasks.iterator();
+            index = 0;
+            priorityLevel = 1;
         }
 
         @Override
         public boolean hasNext() {
-            return itr.hasNext();
+            if (priorityLevel > 4) {
+                return false;
+            }
+
+            int i = index;
+            int p = priorityLevel;
+            while (p < 5) {
+                Todo current = tasks.get(i);
+                int currentp = p;
+                i++;
+                if (i >= tasks.size()) {
+                    i = 0;
+                    p++;
+                }
+
+                if (current.getPriority().equals(new Priority(currentp))) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         @Override
@@ -143,8 +153,21 @@ public class Project extends Todo implements Iterable<Todo> {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
+            while (index < tasks.size() && priorityLevel < 5) {
+                Todo current = tasks.get(index);
+                int currentPriority = priorityLevel;
+                index++;
 
-            return null; //stub
+                if (index >= tasks.size()) {
+                    index = 0;
+                    priorityLevel++;
+                }
+
+                if (current.getPriority().equals(new Priority(currentPriority))) {
+                    return current;
+                }
+            }
+            return null; // should never run
         }
     }
 

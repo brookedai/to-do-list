@@ -284,14 +284,22 @@ public class TestProject {
         todos.add(task4);
         todos.add(task1);
 
+        p.add(task1);
+        p.add(task2);
+        p.add(task3);
+        p.add(task4);
+        p.add(p2);
+
         List<Todo> check = new ArrayList<>();
         for (Todo t : p) {
             check.add(t);
+            System.out.println("Added: " + t.getDescription());
         }
 
         assertEquals(todos.size(), check.size());
-        for (Todo t : todos) {
-            assertTrue(check.contains(t));
+        for (int i = 0; i < todos.size(); i++) {
+            System.out.println(check.get(i).getDescription());
+           //assertTrue(todos.get(i).equals(check.get(i)));
         }
     }
 }

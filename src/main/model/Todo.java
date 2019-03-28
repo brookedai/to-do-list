@@ -1,5 +1,7 @@
 package model;
 
+import model.exceptions.NullArgumentException;
+
 public abstract class Todo {
     protected String description;
     protected int progress;
@@ -17,9 +19,24 @@ public abstract class Todo {
         this.priority = new Priority(4);
     }
 
-    // EFFECTS: returns the description
+    // EFFECTS: returns the description of the task or project
     public String getDescription() {
         return description;
+    }
+
+    // EFFECTS: returns the priority of the task or project
+    public Priority getPriority() {
+        return priority;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: sets the priority of the task or project
+    //   throws NullArgumentException when priority is null
+    public void setPriority(Priority priority) {
+        if (priority == null) {
+            throw new NullArgumentException("Illegal argument: priority is null");
+        }
+        this.priority = priority;
     }
 
     // EFFECTS: return a non-negative integer as the Estimated Time To Complete
