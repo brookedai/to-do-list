@@ -127,8 +127,8 @@ public class Project extends Todo implements Iterable<Todo>, Observer {
 
     // inner class
     private class TodoIterator implements Iterator<Todo> {
-        private int index; // index we're currently at in list
-        private int priorityLevel; // priority we're checking
+        private int index;
+        private int priorityLevel;
 
         public TodoIterator() {
             index = 0;
